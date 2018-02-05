@@ -6,8 +6,7 @@
     "id": "cordova-plugin-datepicker",
     "platforms": [
       "ios",
-      "android",
-      "windows"
+      "android"
     ]
   },
   "repository": {
