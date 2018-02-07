@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 
@@ -66,6 +67,14 @@ public class DatePickerPlugin extends CordovaPlugin {
         Context currentCtx = cordova.getActivity();
         Runnable runnable;
         JsonDate jsonDate = new JsonDate().fromJson(data);
+        if (!jsonDate.locale.isEmpty()) {
+            String[] localeParams = jsonDate.locale.split("_");
+            if (localeParams.length > 1) {
+                currentCtx.getResources().getConfiguration().setLocale(new Locale(localeParams[0], localeParams[1]));
+            } else {
+                currentCtx.getResources().getConfiguration().setLocale(new Locale(localeParams[0]));
+            }
+        }
 
         JSONObject options = data.optJSONObject(0);
         int theme = options.optString("androidTheme").isEmpty()
@@ -304,6 +313,7 @@ public class DatePickerPlugin extends CordovaPlugin {
         private String cancelText = "";
         private String todayText = "";
         private String nowText = "";
+        private String locale = "";
         private long minDate = 0;
         private long maxDate = 0;
         private int month = 0;
@@ -339,6 +349,7 @@ public class DatePickerPlugin extends CordovaPlugin {
                 todayText = isNotEmpty(obj, "todayText") ? obj.getString("todayText") : "";
                 nowText = isNotEmpty(obj, "nowText") ? obj.getString("nowText") : "";
                 is24Hour = isNotEmpty(obj, "is24Hour") && obj.getBoolean("is24Hour");
+                locale = isNotEmpty(obj, "locale") ? obj.getString("locale") : "";
 
                 String optionDate = obj.getString("date");
 
